@@ -1,24 +1,37 @@
-# Spectacle Boilerplate
+# Misconceptions in Client-Side Security 
+## Reverse Engineering Obfuscation & Disguised Endpoints
 
-## Contents
+Live Presentation
+
+[present.oppie.io/client-security/](https://present.oppie.io/client-security/)
+
+Original Blog Post
+
+[patmigliaccio.com/client-side-security/](https://patmigliaccio.com/client-side-security/)
+
+## Development
+
+### Spectacle Boilerplate
+
+#### Contents
 
 - [Reference](#reference)
 - [Getting Started](#getting-started)
 - [Build & Deployment](#build-deployment)
 
-## Reference
+#### Reference
 
 The Spectacle core API is available at [https://github.com/FormidableLabs/spectacle/blob/master/README.md](https://github.com/FormidableLabs/spectacle/blob/master/README.md).
 
 For more information about MDX syntax and how it all works, check out the [MDX documentation](https://mdxjs.com/).
 
-### Slides
+##### Slides
 
 Slides are separated with `---`.
 
 To customize specific MDX functionality in Spectacle Boilerplate MDX, including what characters are used to demarcate slide breaks, refer to the `loader.js` file. We don't recommend altering this functionality unless necessary.
 
-## Getting Started
+#### Getting Started
 
 After downloading the boilerplate, your first order of business is to open a terminal and run 
 ```bash
@@ -46,7 +59,7 @@ npm start
 
 Open a browser and hit [http://localhost:3000](http://localhost:3000), and you're ready to roll. Modify `index.mdx` to see changes, but the best part about MDX is that you can create your own React components and import them into the `index.mdx` file to seamlessly integrate with markdown!
 
-## Build & Deployment
+#### Build & Deployment
 
 Building the dist version of the project is as easy as running
 ```bash

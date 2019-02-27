@@ -1,0 +1,459 @@
+import {Cite, Image} from 'spectacle';
+import {DarkSlide, CodeSlide, TitleSlide} from './slides';
+import fig1 from '../assets/slide_images/fig_1.png';
+import fig2 from '../assets/slide_images/fig_2.png';
+import twitterIcon from '../assets/slide_images/twitter.svg';
+
+export default TitleSlide
+
+---
+
+# Why?
+
+Because this is a JavaScript meetup
+<br />
+
+**Contains a bit of the following:**
+
+Frontend JavaScript
+
+Node.js scripting
+
+Framework agnostic
+
+---
+
+## "Client-Side Security"
+
+It terms of data, not a *thing*.
+
+---
+export default DarkSlide
+
+export const transition = ['zoom']
+
+# OWASP Top 10
+
+#### Open Web Application Security Project
+
+Top 10 Most Critical Web Application Security Risks 
+
+---
+
+# Top 10 - 2017
+
+A1 - Injection
+
+A2 - Broken Authentication
+
+**A3 - Sensitive Data Exposure**
+
+A4 - XML External Entities (XXE)
+
+A5 - Broken Access Control
+
+A6 - Security Misconfiguration
+
+A7 - Cross-Site Scripting (XSS)
+
+A8 - Insecure Deserialization
+
+A9 - Using Components with Known
+
+A10 - Insufficient Logging & Monitoring
+
+---
+
+# Sensitive Data Exposure
+<br />
+
+## What's Not Covered
+- Stealing keys
+- Executing man-in the-middle attacks
+- Stealing data from the server-side
+
+## What's Covered
+- Ways not to secure seemingly unexposed data on the client-side, e.g. browser
+
+---
+export default DarkSlide
+
+export const transition = ['zoom']
+
+# Masked API Endpoints
+
+---
+**Misnaming endpoints**
+
+`/assets/css/svg/generate`
+<br />
+
+**Base64 encoded responses**
+
+`QmFzZTY0IGlzIG5vdCBlbmNyeXB0aW9u`
+<br />
+
+**Hiding parameters** 
+
+`Referer` header
+
+---
+
+**Network Request Sniffing**
+<br />
+
+<Image src={fig1} 
+  alt="Figure 1. A REST call made to `/assets/css/svg/generate` and returning a property with a Base64 string." />
+
+---
+
+**Base64 Encoding**
+<br />
+
+Base64 *is not* Encryption.
+<br />
+
+Base64 *is* a string representation of binary data
+
+---
+export default CodeSlide
+
+```javascript
+  btoa('Base64 is not encryption')
+  // 'QmFzZTY0IGlzIG5vdCBlbmNyeXB0aW9u'
+```
+
+```javascript
+  atob('QmFzZTY0IGlzIG5vdCBlbmNyeXB0aW9u')
+  // 'Base64 is not encryption'
+```
+
+---
+
+## An Impractical Approach
+
+Rearranging each character of the string in reverse order and moving the last `n` characters to the front.
+
+---
+export default CodeSlide
+
+```javascript
+function requestGeneratedSVG(){
+  return fetch('/assets/css/svg/generate')
+      .then(response => {
+        const base64Data = parseSVGResponse(response.data);
+        
+        // Decoded sensitive data would be handled here.
+        return JSON.parse(atob(base64Data));
+      });
+}
+```
+
+---
+export default CodeSlide
+
+```javascript
+function parseSVGResponse(data){
+  // Puts the last 64 chars in the front.
+  let dataAry = data.split('');
+  for (let i = 0; i < 64; i++) {
+    let lastChars = dataAry.pop().trim();
+    
+    dataAry.unshift(lastChars);
+  }
+    
+  // Reverses the order of the string.
+  let dataOut = [];
+  dataAry.forEach(x => dataOut.unshift(x))
+    
+  return dataOut.join('');
+}
+  
+// Note: Complexity added to logic to increase ambiguity
+```
+
+---
+
+**Source is a *direct* blueprint.**
+
+---
+export default DarkSlide
+
+export const transition = ['zoom']
+
+# Obfuscation?
+
+---
+
+# Obfuscation 
+
+1: to throw into shadow
+
+2: to make obscure
+
+3: to confuse
+
+---
+
+## Available Obfuscation Tools
+
+JavaScript Obfuscator
+
+Google Closure Compiler
+
+YUI Compressor
+
+UglifyJS
+<br />
+
+*Minifiers with added optimizations to mangle code.*
+
+---
+
+> With JavaScript Obfuscator your JavaScript code will become impossible to understand thus preventing anyone to steal and modify it.
+
+<Cite>JavaScript Obfuscator</Cite>
+
+---
+export default DarkSlide
+
+<Image src={fig2} alt="Obfuscated code" />
+
+---
+export default CodeSlide
+
+```javascript
+var _0xe6a3 = [
+  "\\x64\\x61\\x74\\x61", "\\x70\\x61\\x72\\x73\\x65", "\\x74\\x68\\x65\\x6E", "\\x2F\\x61\\x73\\x73\\x65\\x74\\x73\\x2F\\x63\\x73\\x73\\x2F\\x73\\x76\\x67\\x2F\\x67\\x65\\x6E\\x65\\x72\\x61\\x74\\x65", "", "\\x73\\x70\\x6C\\x69\\x74", "\\x74\\x72\\x69\\x6D", "\\x70\\x6F\\x70", "\\x75\\x6E\\x73\\x68\\x69\\x66\\x74", "\\x66\\x6F\\x72\\x45\\x61\\x63\\x68", "\\x6A\\x6F\\x69\\x6E"
+];
+  
+function requestGeneratedSVG() {
+  return fetch(_0xe6a3[3])[_0xe6a3[2]](function(_0xe415x2) {
+    let _0xe415x3 = parseSVGResponse(_0xe415x2[_0xe6a3[0]]);
+    return JSON[_0xe6a3[1]](atob(_0xe415x3))
+  })
+}
+```
+
+---
+export default CodeSlide
+
+```javascript
+function parseSVGResponse(_0xe415x5) {
+  var _0xe415x6 = _0xe415x5[_0xe6a3[5]](_0xe6a3[4]);
+  for (let _0xe415x7 = 0; _0xe415x7 < 64; _0xe415x7++) {
+    var _0xe415x8 = _0xe415x6[_0xe6a3[7]]()[_0xe6a3[6]]();
+    _0xe415x6[_0xe6a3[8]](_0xe415x8)
+  };
+  var _0xe415x9 = [];
+  _0xe415x6[_0xe6a3[9]](function(_0xe415xa) {
+    _0xe415x9[_0xe6a3[8]](_0xe415xa)
+  });
+  return _0xe415x9[_0xe6a3[10]](_0xe6a3[4])
+}
+
+```
+
+---
+
+## What's happening underneath?
+
+---
+
+Renamed variables as
+
+**hexadecimal integer literals**
+
+in sequential order
+<br />
+
+`firstVariable` -> `a` -> `_0xcd03`
+<br />
+
+`twentyEighthVariable` -> `ab` -> `_0xea02x8`
+<br />
+
+- `0 = a`
+- `1 = b`
+- ...
+- `26 = aa`
+
+---
+
+Renamed properties to 
+
+**hex value representations** 
+
+of **character codes** for 
+
+ASCII characters
+<br />
+
+`c` -> `\\x63`
+<br />
+
+`forEach` -> `\\x66\\x6F\\x72\\x45\\x61\\x63\\x68`
+
+---
+
+Replaced property values with array references 
+<br />
+
+`str.trim()` -> `e['trim']()` -> `e[a[6]]()`
+<br />
+
+`a = [0...5, 'trim']`
+
+---
+export default DarkSlide
+
+export const transition = ['zoom']
+
+# Reverse Engineering
+
+---
+export default CodeSlide
+
+```javascript
+function replaceHexVariables(data) {
+  // Match all hex values
+  const matches = data.match(/_0x.{4}(x[0-9a-z]+)?/g);
+  
+  // Filters out only unique hex values.
+  var detected = {};
+  matches.filter(value => {
+      if (detected.hasOwnProperty(value)) {
+        return false;
+      } else {
+        detected[value] = true
+      }
+    })
+    .forEach((hexValue, i) => {
+      const pattern = new RegExp(hexValue, "g");
+      // Replaces hex value with character
+      data = data.replace(pattern, numberToLetters(i));
+    });
+  
+  return data;
+}
+```
+
+---
+export default CodeSlide
+
+```javascript
+// Converts hex values `\\x??` to ASCII equivalent.
+function replaceHexArrayValues(data) {
+	return data = data.replace(/\\x.{2}/g, value => String.fromCharCode(parseInt(value.substr(2), 16)));
+}
+```
+
+---
+export default CodeSlide
+
+```javascript
+// Replaces array reference values from arrays `e[a[6]]()` -> `e['trim']()`
+function replaceArrayReferences(data) {
+	let arrays = {};
+
+	// Extracts basic array declarations created by the obfuscator into the `arrays` object.
+	const arraySyntaxPattern = /var\s(.+)\s=\s(\[.+\]);/g;
+	data.replace(arraySyntaxPattern, (match, arrayName, arrayString) => {
+		// Be wary of the use of `eval` here
+		// See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
+		arrays[arrayName] = eval(arrayString);
+	});
+
+	// Replaces array references with the corresponding value from the `arrays` object.
+	const arrayReferenceSyntaxPattern = /([a-z]+)\[([0-9]+)\]/g;
+	data = data.replace(arrayReferenceSyntaxPattern, (match, arrayName, indexValue) => {
+		return Array.isArray(arrays[arrayName]) && arrays[arrayName][indexValue] !== undefined ? `'${arrays[arrayName][indexValue]}'` : match;
+	});
+
+	return data;
+}
+```
+
+---
+export default CodeSlide
+
+```javascript
+// Converts integers to multi-character strings. `0` -> a or `26` -> `aa`
+function numberToLetters(i) {
+	return (i >= 26 ? numberToLetters((i / 26 >> 0) - 1) : '') +  'abcdefghijklmnopqrstuvwxyz'[i % 26 >> 0];
+}
+```
+
+---
+
+# Deobfuscated Result
+
+---
+export default CodeSlide
+
+```javascript
+function requestGeneratedSVG() {
+    return fetch('/assets/css/svg/generate')['then'](function(b) {
+        let c = parseSVGResponse(b['data']);
+        return JSON['parse'](atob(c))
+    })
+}
+
+function parseSVGResponse(d) {
+    var e = d['split']('');
+    for (let f = 0; f < 64; f++) {
+        var g = e['pop']()['trim']();
+        e['unshift'](g)
+    };
+    var h = [];
+    e['forEach'](function(i) {
+        h['unshift'](i)
+    });
+    return h['join']('')
+}
+```
+
+---
+
+## Deobfuscation, Web Scraping, & ASTs
+
+Other JavaScript Deobfuscation tools
+<br/>
+
+Web scraping can be done to automate this
+<br/>
+
+Parse obfuscated code into abstract syntax trees (AST) (e.g. Babel's Babylon)
+
+---
+
+## What should be done?
+
+---
+
+Use **proper** endpoint security.
+
+---
+
+**Authentication** and **Authorization**
+<br />
+
+e.g. OAuth 2.0 Framework, JSON Web Tokens, Passport.js, etc.
+
+---
+
+Focus on **code readability**.
+
+---
+export default DarkSlide
+
+export const transition = ['zoom']
+
+### Thank you.
+<br />
+
+**Twitter**
+@pat_migliaccio
+
+**Website**
+patm.io

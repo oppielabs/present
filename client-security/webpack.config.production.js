@@ -2,6 +2,7 @@
 
 var path = require("path");
 var webpack = require("webpack");
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: "production",
@@ -9,14 +10,18 @@ module.exports = {
   output: {
     path: path.join(__dirname, "dist"),
     filename: "bundle.js",
-    publicPath: "/dist/"
+    publicPath: "./"
   },
   plugins: [
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production")
       }
-    })
+    }),
+    new CopyWebpackPlugin([{
+      from: './*.html',
+      transform: content => content.toString('utf8').replace('./dist', '.')
+    }])
   ],
   optimization: {
     minimize: true

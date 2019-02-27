@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "name": "oppie-present",
+  "builds": [
+    { 
+      "src": "*/package.json", 
+      "use": "@now/static-build"
+    }
+  ],
+  "alias": ["present.oppie.io"]
+}

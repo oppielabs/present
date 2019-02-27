@@ -25,9 +25,12 @@ const creeperTransition = (transitioning, forward) => {
   };
 };
 
+// Disabling progress bar on mobile
+const isMobile = document.body.clientWidth < 900;
+
 ReactDOM.render(
   <AppContainer errorReporter={CustomErrorReporter}>
-    <Deck transition={[creeperTransition]} transitionDuration={500} theme={theme}>
+    <Deck transition={[creeperTransition]} transitionDuration={500} theme={theme} progress={!isMobile ? 'pacman' : 'none'}>
       {slides.map((S, i) => {
         let transition = transitions[i] || null;
         return <S transition={transition} key={`slide-${i}`} />;

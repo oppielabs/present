@@ -1,36 +1,16 @@
 import React from 'react';
-import { Slide, Text, Heading, ListItem, Image } from 'spectacle';
+import { Slide } from 'spectacle';
 import { MDXProvider } from '@mdx-js/tag'
-import styled from '@emotion/styled';
 import components from './components';
 import theme from './theme';
 
-// MOBILE OVERRIDES
-const mobileMaxWidth = '900px';
-const mobileFontSizeValue = 0.50;
+import { 
+  StyledHeading, 
+  StyledText, 
+  StyledListItem, 
+  StyledCodePane 
+} from './mobile-components';
 
-const mobileFontSize = (type, childType) => {
-  const component = childType ? theme.screen.components[type][childType] : theme.screen.components[type];
-  return component.fontSize ? (component.fontSize.replace('rem', '') * mobileFontSizeValue) + 'rem'  : null
-}
-
-const StyledText = styled(Text)`
-  @media (max-width: ${mobileMaxWidth}) {
-    font-size: ${mobileFontSize('text')} !important;
-  }
-`;
-
-const StyledHeading = styled(Heading)`
-  @media (max-width: ${mobileMaxWidth}) {
-    font-size: ${props => mobileFontSize('heading', 'h' + props.size)} !important;
-  }
-`;
-
-const StyledListItem = styled(ListItem)`
-  @media (max-width: ${mobileMaxWidth}) {
-    font-size: ${mobileFontSize('listItem')} !important;
-  }
-`;
 
 const mobileComponents = {
   ...components,
@@ -42,6 +22,7 @@ const mobileComponents = {
   h6: ({ children }) => <StyledHeading size={6}>{children}</StyledHeading>,
   p: ({ children }) => <StyledText>{children}</StyledText>,
   li: ({ children }) => <StyledListItem>{children}</StyledListItem>,
+  code: ({ children }) => <StyledCodePane>{children}</StyledCodePane>
 }
 
 // DEFAULT LAYOUT

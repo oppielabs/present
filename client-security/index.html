@@ -5,6 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no" />
   <title>Misconceptions in Client-Side Security - Reverse Engineering Obfuscation & Disguised Endpoints</title>
+
+  <script>
+    if (window.location.href.match(/[^\/]$/)) {
+      window.location.href += '/'
+    }
+  </script>
+
   <link href="https://fonts.googleapis.com/css?family=Raleway:300|Kanit:800|Barlow" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-themes@1.0.1/themes/prism-atom-dark.css" />
 </head>
